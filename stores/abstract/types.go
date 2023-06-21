@@ -7,6 +7,7 @@ import (
 	"github.com/small-entropy/go-backbone/datatypes/recordset"
 )
 
+// Структура источника данных
 type Store[STORAGE any, ID any, DATA any] struct {
 	Storage STORAGE
 	Context *context.Context
