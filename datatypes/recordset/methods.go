@@ -2,6 +2,7 @@ package recordset
 
 import "github.com/small-entropy/go-backbone/datatypes/record"
 
+// Get Item mehtod
 func (rs *RecordSet[ID, DATA]) GetItems() []record.Record[ID, DATA] {
 	return rs.Items
 }
