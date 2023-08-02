@@ -11,6 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// DeleteOne
 // Обработчик мягкого удаления
 func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo.Context) error {
 	var err error
@@ -87,6 +88,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo.Context) error {
 	return c.JSON(code, response)
 }
 
+// EraseOne
 // Обработчик перманентного удаления
 func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo.Context) error {
 	var err error
