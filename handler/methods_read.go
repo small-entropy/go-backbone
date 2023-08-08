@@ -11,11 +11,12 @@ import (
 	"github.com/small-entropy/go-backbone/response/jsend"
 	"github.com/small-entropy/go-backbone/stores/abstract"
 
-	"github.com/labstack/echo/v4"
+	echo_facade "github.com/small-entropy/go-backbone/facades/echo"
 )
 
+// Get
 // Обработчик получения одной записи
-func (h *Handler[CONN, ID, DATA, DTO]) Get(c echo.Context) error {
+func (h *Handler[CONN, ID, DATA, DTO]) Get(c echo_facade.Context) error {
 	var err error
 	var result record.Record[ID, DATA]
 	var response *jsend.Response
@@ -35,9 +36,9 @@ func (h *Handler[CONN, ID, DATA, DTO]) Get(c echo.Context) error {
 				if result, err = h.Settings.Controller.FindOne(identifier, false, nil, &provider); err == nil {
 
 					if h.Adapter != nil {
-						response = jsend.Success(&echo.Map{field: h.Adapter.One(&result)})
+						response = jsend.Success(&echo_facade.Map{field: h.Adapter.One(&result)})
 					} else {
-						response = jsend.Success(&echo.Map{field: result})
+						response = jsend.Success(&echo_facade.Map{field: result})
 					}
 				} else {
 					code = http.StatusInternalServerError
@@ -47,7 +48,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) Get(c echo.Context) error {
 						Message: error_constants.MSG_HANDLER_PROVIDER,
 						Err:     err,
 					}
-					response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo.Map{field: err.Error()}, code)
+					response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field: err.Error()}, code)
 				}
 			} else {
 				code = http.StatusInternalServerError
@@ -57,7 +58,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) Get(c echo.Context) error {
 					Message: error_constants.MSG_HANDLER_PROVIDER,
 					Err:     err,
 				}
-				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo.Map{field: err.Error()}, code)
+				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field: err.Error()}, code)
 			}
 		} else {
 			code = http.StatusBadRequest
@@ -67,7 +68,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) Get(c echo.Context) error {
 				Message: error_constants.MSG_HANDLER_CONVERT_ID,
 				Err:     err,
 			}
-			response = jsend.Fail(&echo.Map{field: err.Error()})
+			response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 		}
 	} else {
 		code = http.StatusBadRequest
@@ -77,13 +78,14 @@ func (h *Handler[CONN, ID, DATA, DTO]) Get(c echo.Context) error {
 			Message: error_constants.MSG_HANDLER_PARAMS,
 			Err:     err,
 		}
-		response = jsend.Fail(&echo.Map{field: err.Error()})
+		response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 	}
 	return c.JSON(code, response)
 }
 
+// List
 // Обработчик получения списка записей
-func (h *Handler[CONN, ID, DATA, DTO]) List(c echo.Context) error {
+func (h *Handler[CONN, ID, DATA, DTO]) List(c echo_facade.Context) error {
 	var err error
 	var response *jsend.Response
 	var results recordset.RecordSet[ID, DATA]
@@ -120,7 +122,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) List(c echo.Context) error {
 				} else {
 					data = results
 				}
-				response = jsend.Success(&echo.Map{
+				response = jsend.Success(&echo_facade.Map{
 					field_entities: data,
 					field_meta:     results.Meta,
 				})
@@ -133,7 +135,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) List(c echo.Context) error {
 				Message: error_constants.MSG_HANDLER_CREATE,
 				Err:     err,
 			}
-			response = jsend.Fail(&echo.Map{field_entities: err.Error()})
+			response = jsend.Fail(&echo_facade.Map{field_entities: err.Error()})
 
 		}
 	} else {
@@ -144,7 +146,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) List(c echo.Context) error {
 			Message: error_constants.MSG_HANDLER_PROVIDER,
 			Err:     err,
 		}
-		response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo.Map{field_entities: err.Error()}, code)
+		response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field_entities: err.Error()}, code)
 	}
 	return c.JSON(code, response)
 }

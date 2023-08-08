@@ -5,23 +5,23 @@ import (
 	"github.com/small-entropy/go-backbone/datatypes/record"
 	"github.com/small-entropy/go-backbone/datatypes/recordset"
 	backbone_error "github.com/small-entropy/go-backbone/error"
+	"github.com/small-entropy/go-backbone/facades/mongo"
+	mongo_facade "github.com/small-entropy/go-backbone/facades/mongo"
 	"github.com/small-entropy/go-backbone/utils/convert"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // DeleteOne
 // Метод удаления записи из коллекции
-func (s *MongoStore[DATA]) DeleteOne(filter map[string]interface{}) (record.Record[primitive.ObjectID, DATA], error) {
+func (s *MongoStore[DATA]) DeleteOne(filter map[string]interface{}) (record.Record[mongo_facade.ObjectID, DATA], error) {
 	var err error
-	var result record.Record[primitive.ObjectID, DATA]
+	var result record.Record[mongo_facade.ObjectID, DATA]
 
 	filter_bson := convert.MapToBsonM(filter)
 
 	if result, err = s.FindOne(filter_bson); err == nil {
 		_, err = s.Storage.DeleteOne(*s.Context, filter_bson)
 	} else {
+		_, err = s.Storage.DeleteOne(*s.Context, filter_bson)
 		err = &backbone_error.StoreError{
 			Status:       error_constants.ERR_STORE_DELETE,
 			StorageName:  s.Storage.Name(),
@@ -29,15 +29,16 @@ func (s *MongoStore[DATA]) DeleteOne(filter map[string]interface{}) (record.Reco
 			Err:          err,
 		}
 	}
+
 	return result, err
 }
 
 // DeleteMany
 // Метод удаления списка записей из коллекции по фильтру
-func (s *MongoStore[DATA]) DeleteMany(filter map[string]interface{}) (recordset.RecordSet[primitive.ObjectID, DATA], error) {
+func (s *MongoStore[DATA]) DeleteMany(filter map[string]interface{}) (recordset.RecordSet[mongo_facade.ObjectID, DATA], error) {
 	var err error
-	var results recordset.RecordSet[primitive.ObjectID, DATA]
-	var records []record.Record[primitive.ObjectID, DATA]
+	var results recordset.RecordSet[mongo_facade.ObjectID, DATA]
+	var records []record.Record[mongo_facade.ObjectID, DATA]
 
 	filter_bson := convert.MapToBsonM(filter)
 

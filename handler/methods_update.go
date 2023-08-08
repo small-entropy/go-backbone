@@ -6,14 +6,14 @@ import (
 	error_constants "github.com/small-entropy/go-backbone/constants/error"
 	"github.com/small-entropy/go-backbone/datatypes/record"
 	backbone_error "github.com/small-entropy/go-backbone/error"
+	echo_facade "github.com/small-entropy/go-backbone/facades/echo"
 	store_provider "github.com/small-entropy/go-backbone/providers/store"
 	"github.com/small-entropy/go-backbone/response/jsend"
-
-	"github.com/labstack/echo/v4"
 )
 
+// UpdateOne
 // Обработчик обновления одной записи
-func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo.Context) error {
+func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo_facade.Context) error {
 	var err error
 	var result record.Record[ID, DATA]
 	var response *jsend.Response
@@ -49,7 +49,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo.Context) error {
 								} else {
 									data = result
 								}
-								response = jsend.Success(&echo.Map{
+								response = jsend.Success(&echo_facade.Map{
 									field: data,
 								})
 							}
@@ -61,7 +61,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo.Context) error {
 								Message: error_constants.MSG_HANDLER_UPDATE,
 								Err:     err,
 							}
-							response = jsend.Fail(&echo.Map{field: err.Error()})
+							response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 						}
 					} else {
 						code = http.StatusBadRequest
@@ -71,7 +71,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo.Context) error {
 							Message: error_constants.MSG_HANDLER_FILL,
 							Err:     err,
 						}
-						response = jsend.Fail(&echo.Map{field: err.Error()})
+						response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 					}
 				} else {
 					code = http.StatusBadRequest
@@ -81,7 +81,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo.Context) error {
 						Message: error_constants.MSG_HANDLER_DTO,
 						Err:     err,
 					}
-					response = jsend.Fail(&echo.Map{field: err.Error()})
+					response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 				}
 			} else {
 				code = http.StatusBadRequest
@@ -91,7 +91,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo.Context) error {
 					Message: error_constants.MSG_HANDLER_CONVERT_ID,
 					Err:     err,
 				}
-				response = jsend.Fail(&echo.Map{field: err.Error()})
+				response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 			}
 		} else {
 			code = http.StatusInternalServerError
@@ -101,7 +101,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo.Context) error {
 				Message: error_constants.MSG_HANDLER_PROVIDER,
 				Err:     err,
 			}
-			response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo.Map{field: err.Error()}, code)
+			response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field: err.Error()}, code)
 		}
 	} else {
 		code = http.StatusBadRequest
@@ -111,7 +111,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo.Context) error {
 			Message: error_constants.MSG_HANDLER_PARAMS,
 			Err:     err,
 		}
-		response = jsend.Fail(&echo.Map{field: err.Error()})
+		response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 	}
 	return c.JSON(code, response)
 }

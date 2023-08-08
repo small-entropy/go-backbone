@@ -6,19 +6,16 @@ import (
 	"time"
 
 	"github.com/small-entropy/go-backbone/database/abstract"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	mongo_facade "github.com/small-entropy/go-backbone/facades/mongo"
 )
 
 // Метод для установления соединения с репозиторием
 func (m *MongoBD) Connect(uri string, database string) error {
 	var err error
-	var client *mongo.Client
+	var client *mongo_facade.Client
 	// Пытаемся создать клиент для подключения к MongoDB
-	m.Options = options.Client().ApplyURI(uri)
-	if client, err = mongo.NewClient(m.Options); err == nil {
+	m.Options = mongo_facade.GetClientOptions().ApplyURI(uri)
+	if client, err = mongo_facade.NewClient(m.Options); err == nil {
 		// Если удалось создать клиент, то пытаемся выполнить подключение
 		// к серверу MongoDB
 		m.Client = client
@@ -56,7 +53,7 @@ func (m *MongoBD) Connect(uri string, database string) error {
 }
 
 // Метод для получения хранилища данных
-func (m *MongoBD) GetStorage(ctx *context.Context, store_name string) *mongo.Collection {
+func (m *MongoBD) GetStorage(ctx *context.Context, store_name string) *mongo_facade.Collection {
 	collection := m.Client.Database(m.Name).Collection(store_name)
 	return collection
 }
@@ -80,16 +77,16 @@ func (m *MongoBD) CreateIndexes(opts []abstract.IndexOptions) error {
 func (m *MongoBD) CreateIndex(ctx context.Context, collectionName string, indexName string, unique bool) error {
 	var err error
 	var name string
-	var datastore *mongo.Collection
+	var datastore *mongo_facade.Collection
 
 	// Задаем модель индекса
-	indexModel := mongo.IndexModel{
+	indexModel := mongo_facade.IndexModel{
 		// Указываем, какие поля требуется индексировать
-		Keys: bson.D{
+		Keys: mongo_facade.BsonD{
 			{Key: indexName, Value: 1},
 		},
 		// Указываем опции индексации
-		Options: options.Index().SetUnique(unique),
+		Options: mongo_facade.GetIndexOptions().SetUnique(unique),
 	}
 
 	// Получаем коллекцию по названию

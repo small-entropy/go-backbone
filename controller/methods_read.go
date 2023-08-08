@@ -11,6 +11,7 @@ import (
 	"github.com/small-entropy/go-backbone/stores/abstract"
 )
 
+// FindOne
 // Метод получения одной записи по фильтрам
 func (c *Controller[CONN, ID, DATA]) FindOne(
 	identifier ID,
@@ -41,6 +42,7 @@ func (c *Controller[CONN, ID, DATA]) FindOne(
 	return result, err
 }
 
+// FindOneByFilter
 // Метод получения одной записи по фильтрам
 func (c *Controller[CONN, ID, DATA]) FindOneByFilter(
 	filter map[string]interface{},
@@ -60,6 +62,7 @@ func (c *Controller[CONN, ID, DATA]) FindOneByFilter(
 	return result, err
 }
 
+// Find
 // Метод получения списка записей по фильтрам и пагинации
 func (c *Controller[CONN, ID, DATA]) Find(
 	filter map[string]interface{},

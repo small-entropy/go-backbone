@@ -9,6 +9,7 @@ import (
 	"github.com/small-entropy/go-backbone/providers/store"
 )
 
+// DeleteOne
 // Метод мягкого удаления
 func (c *Controller[CONN, ID, DATA]) DeleteOne(
 	filter map[string]interface{},
@@ -34,6 +35,7 @@ func (c *Controller[CONN, ID, DATA]) DeleteOne(
 	return result, err
 }
 
+// EraseOne
 // Метод перманентного удаления
 func (c *Controller[CONN, ID, DATA]) EraseOne(
 	filter map[string]interface{},

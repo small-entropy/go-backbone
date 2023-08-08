@@ -1,10 +1,12 @@
 package jsend
 
-import "github.com/labstack/echo/v4"
+import (
+	echo_facade "github.com/small-entropy/go-backbone/facades/echo"
+)
 
 type Response struct {
-	Status  string    `json:"status" yaml:"status"`
-	Data    *echo.Map `json:"data,omitempty" yaml:"data,omitempty"`
-	Message string    `json:"message,omitempty" yaml:"message,omitempty"`
-	Code    int       `json:"code,omitempty" yaml:"code,omitempty"`
+	Status  string           `json:"status" yaml:"status"`
+	Data    *echo_facade.Map `json:"data,omitempty" yaml:"data,omitempty"`
+	Message string           `json:"message,omitempty" yaml:"message,omitempty"`
+	Code    int              `json:"code,omitempty" yaml:"code,omitempty"`
 }

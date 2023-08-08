@@ -9,9 +9,10 @@ import (
 	backbone_error "github.com/small-entropy/go-backbone/error"
 	store_provider "github.com/small-entropy/go-backbone/providers/store"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	mongo_facade "github.com/small-entropy/go-backbone/facades/mongo"
 )
 
+// UpdateOne
 // Метод обновления одной записи
 func (c *Controller[CONN, ID, DATA]) UpdateOne(
 	filter map[string]interface{},
@@ -24,7 +25,8 @@ func (c *Controller[CONN, ID, DATA]) UpdateOne(
 	var update_map map[string]interface{}
 	if update_json, err = json.Marshal(update); err == nil {
 		if err = json.Unmarshal(update_json, &update_map); err == nil {
-			updatedAt := primitive.Timestamp{T: uint32(time.Now().Unix())}
+			// TODO: отвязать от MongoDB
+			updatedAt := mongo_facade.Timestamp{T: uint32(time.Now().Unix())}
 			update_map[c.Fields["UpdatedAt"]] = updatedAt
 			if result, err = provider.Store.UpdateOne(filter, update_map); err != nil {
 				err = &backbone_error.ControllerError[DATA]{

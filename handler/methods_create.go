@@ -9,11 +9,12 @@ import (
 	store_provider "github.com/small-entropy/go-backbone/providers/store"
 	"github.com/small-entropy/go-backbone/response/jsend"
 
-	"github.com/labstack/echo/v4"
+	echo_facade "github.com/small-entropy/go-backbone/facades/echo"
 )
 
+// Create
 // Обработчик создания записи
-func (h *Handler[CONN, ID, DATA, DTO]) Create(c echo.Context) error {
+func (h *Handler[CONN, ID, DATA, DTO]) Create(c echo_facade.Context) error {
 	var err error
 	var response *jsend.Response
 	var dto DTO
@@ -40,7 +41,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) Create(c echo.Context) error {
 						} else {
 							data = result
 						}
-						response = jsend.Success(&echo.Map{field: data})
+						response = jsend.Success(&echo_facade.Map{field: data})
 					}
 				} else {
 					code = http.StatusBadRequest
@@ -50,7 +51,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) Create(c echo.Context) error {
 						Message: error_constants.MSG_HANDLER_CREATE,
 						Err:     err,
 					}
-					response = jsend.Fail(&echo.Map{field: err.Error()})
+					response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 				}
 			} else {
 				code = http.StatusInternalServerError
@@ -60,7 +61,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) Create(c echo.Context) error {
 					Message: error_constants.MSG_HANDLER_PROVIDER,
 					Err:     err,
 				}
-				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo.Map{field: err.Error()}, code)
+				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field: err.Error()}, code)
 			}
 		} else {
 			code = http.StatusBadRequest
@@ -70,7 +71,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) Create(c echo.Context) error {
 				Message: error_constants.MSG_HANDLER_FILL,
 				Err:     err,
 			}
-			response = jsend.Fail(&echo.Map{field: err.Error()})
+			response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 		}
 	} else {
 		code = http.StatusBadRequest
@@ -80,7 +81,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) Create(c echo.Context) error {
 			Message: error_constants.MSG_HANDLER_DTO,
 			Err:     err,
 		}
-		response = jsend.Error(error_constants.MSG_HANDLER_DTO, &echo.Map{field: err.Error()}, code)
+		response = jsend.Error(error_constants.MSG_HANDLER_DTO, &echo_facade.Map{field: err.Error()}, code)
 	}
 	return c.JSON(code, response)
 }
