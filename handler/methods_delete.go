@@ -8,11 +8,12 @@ import (
 	backbone_error "github.com/small-entropy/go-backbone/error"
 	"github.com/small-entropy/go-backbone/response/jsend"
 
-	"github.com/labstack/echo/v4"
+	echo_facade "github.com/small-entropy/go-backbone/facades/echo"
 )
 
+// DeleteOne
 // Обработчик мягкого удаления
-func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo.Context) error {
+func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo_facade.Context) error {
 	var err error
 	var result record.Record[ID, DATA]
 	var response *jsend.Response
@@ -42,7 +43,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo.Context) error {
 						} else {
 							data = result
 						}
-						response = jsend.Success(&echo.Map{field: data})
+						response = jsend.Success(&echo_facade.Map{field: data})
 					}
 				} else {
 					code = http.StatusInternalServerError
@@ -52,7 +53,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo.Context) error {
 						Message: error_constants.MSG_HANDLER_DELETE,
 						Err:     err,
 					}
-					response = jsend.Error(error_constants.MSG_HANDLER_DELETE, &echo.Map{field: err.Error()}, code)
+					response = jsend.Error(error_constants.MSG_HANDLER_DELETE, &echo_facade.Map{field: err.Error()}, code)
 				}
 			} else {
 				code = http.StatusInternalServerError
@@ -62,7 +63,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo.Context) error {
 					Message: error_constants.MSG_HANDLER_PROVIDER,
 					Err:     err,
 				}
-				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo.Map{field: err.Error()}, code)
+				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field: err.Error()}, code)
 			}
 		} else {
 			code = http.StatusBadRequest
@@ -72,7 +73,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo.Context) error {
 				Message: error_constants.MSG_HANDLER_CONVERT_ID,
 				Err:     err,
 			}
-			response = jsend.Fail(&echo.Map{field: err.Error()})
+			response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 		}
 	} else {
 		code = http.StatusBadRequest
@@ -82,13 +83,14 @@ func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo.Context) error {
 			Message: error_constants.MSG_HANDLER_PARAMS,
 			Err:     err,
 		}
-		response = jsend.Fail(&echo.Map{field: err.Error()})
+		response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 	}
 	return c.JSON(code, response)
 }
 
+// EraseOne
 // Обработчик перманентного удаления
-func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo.Context) error {
+func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo_facade.Context) error {
 	var err error
 	var response *jsend.Response
 	var result record.Record[ID, DATA]
@@ -117,7 +119,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo.Context) error {
 						} else {
 							data = result
 						}
-						response = jsend.Success(&echo.Map{field: data})
+						response = jsend.Success(&echo_facade.Map{field: data})
 					}
 				} else {
 					code = http.StatusInternalServerError
@@ -127,7 +129,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo.Context) error {
 						Message: error_constants.MSG_HANDLER_ERASE,
 						Err:     err,
 					}
-					response = jsend.Error(error_constants.MSG_HANDLER_ERASE, &echo.Map{field: err.Error()}, code)
+					response = jsend.Error(error_constants.MSG_HANDLER_ERASE, &echo_facade.Map{field: err.Error()}, code)
 				}
 			} else {
 				code = http.StatusInternalServerError
@@ -137,7 +139,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo.Context) error {
 					Message: error_constants.MSG_HANDLER_PROVIDER,
 					Err:     err,
 				}
-				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo.Map{field: err.Error()}, code)
+				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field: err.Error()}, code)
 			}
 		} else {
 			code = http.StatusBadRequest
@@ -147,7 +149,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo.Context) error {
 				Message: error_constants.MSG_HANDLER_CONVERT_ID,
 				Err:     err,
 			}
-			response = jsend.Fail(&echo.Map{field: err.Error()})
+			response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 		}
 	} else {
 		code = http.StatusBadRequest
@@ -157,7 +159,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo.Context) error {
 			Message: error_constants.MSG_HANDLER_PARAMS,
 			Err:     err,
 		}
-		response = jsend.Fail(&echo.Map{field: err.Error()})
+		response = jsend.Fail(&echo_facade.Map{field: err.Error()})
 	}
 	return c.JSON(code, response)
 }

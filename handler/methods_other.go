@@ -9,9 +9,10 @@ import (
 	"errors"
 	"time"
 
-	"github.com/labstack/echo/v4"
+	echo_facade "github.com/small-entropy/go-backbone/facades/echo"
 )
 
+// GetParamField
 // Метод получения параметра запроса
 func (h *Handler[CONN, ID, DATA, DTO]) GetParamField(key string) (string, error) {
 	var err error
@@ -22,22 +23,25 @@ func (h *Handler[CONN, ID, DATA, DTO]) GetParamField(key string) (string, error)
 	return param_key, err
 }
 
+// GetCtxTimeout
 // Метод получения таймаута
 func (h *Handler[CONN, ID, DATA, DTO]) GetCtxTimeout() time.Duration {
 	timeout := 10 * time.Second
 	return timeout
 }
 
+// GetRequestContext
 // Метод получения контекста выполнения обработчика
-func (h *Handler[CONN, ID, DATA, DTO]) GetRequestContext(c *echo.Context) (context.Context, context.CancelFunc) {
+func (h *Handler[CONN, ID, DATA, DTO]) GetRequestContext(c *echo_facade.Context) (context.Context, context.CancelFunc) {
 	echo_ctx := *c
 	timeout := h.GetCtxTimeout()
 	ctx, cancel := context.WithTimeout(echo_ctx.Request().Context(), timeout)
 	return ctx, cancel
 }
 
-// Метод получения Data Transer Object
-func (h *Handler[CONN, ID, DATA, DTO]) GetDTO(e *echo.Context) (DTO, error) {
+// GetDTO
+// Метод получения Data Transfer Object
+func (h *Handler[CONN, ID, DATA, DTO]) GetDTO(e *echo_facade.Context) (DTO, error) {
 	var err error
 	var dto DTO
 
@@ -50,8 +54,9 @@ func (h *Handler[CONN, ID, DATA, DTO]) GetDTO(e *echo.Context) (DTO, error) {
 	return dto, err
 }
 
+// GetSkipFromQuery
 // Функция получения количество пропускаемых записей
-func (h *Handler[CONN, ID, DATA, DTO]) GetSkipFromQuery(c *echo.Context) int64 {
+func (h *Handler[CONN, ID, DATA, DTO]) GetSkipFromQuery(c *echo_facade.Context) int64 {
 	var skip int64
 	var err error
 	ctx := *c
@@ -67,8 +72,9 @@ func (h *Handler[CONN, ID, DATA, DTO]) GetSkipFromQuery(c *echo.Context) int64 {
 	return skip
 }
 
+// GetLimitFromQuery
 // Функция получения максимального количество возвращаемых записей
-func (h *Handler[CONN, ID, DATA, DTO]) GetLimitFromQuery(c *echo.Context) int64 {
+func (h *Handler[CONN, ID, DATA, DTO]) GetLimitFromQuery(c *echo_facade.Context) int64 {
 	var limit int64
 	var err error
 	ctx := *c
@@ -84,6 +90,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) GetLimitFromQuery(c *echo.Context) int64 
 	return limit
 }
 
+// GetResponseField
 // Метод получения поля для ответа
 func (h *Handler[CONN, ID, DATA, DTO]) GetResponseField(key string) string {
 	response_field := h.Settings.Fields.Response[key]

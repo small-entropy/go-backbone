@@ -2,6 +2,7 @@ package record
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
+// TODO: отвязять от MongoDB модель Record
 type Record[ID any, DATA any] struct {
 	Identifier ID                   `bson:"_id" json:"Identifier,omitempty"`
 	Data       DATA                 `bson:",inline"`

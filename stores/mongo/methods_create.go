@@ -4,23 +4,27 @@ import (
 	error_constants "github.com/small-entropy/go-backbone/constants/error"
 	"github.com/small-entropy/go-backbone/datatypes/record"
 	backbone_error "github.com/small-entropy/go-backbone/error"
+	mongo_facade "github.com/small-entropy/go-backbone/facades/mongo"
 
 	"time"
 )
 
+// InsertOne
 // Метод вставки в коллекцию документа
-func (s *MongoStore[DATA]) InsertOne(data DATA) (record.Record[ObjectID, DATA], error) {
+func (s *MongoStore[DATA]) InsertOne(data DATA) (record.Record[mongo_facade.ObjectID, DATA], error) {
 	var err error
-	var result *InsertOneResult
-	var inserted record.Record[ObjectID, DATA]
-	to_insert := &record.Record[ObjectID, DATA]{
-		Identifier: NewObjectID(),
+	var result *mongo_facade.InsertOneResult
+	var inserted record.Record[mongo_facade.ObjectID, DATA]
+
+	to_insert := &record.Record[mongo_facade.ObjectID, DATA]{
+		Identifier: mongo_facade.NewObjectID(),
 		Data:       data,
-		CreatedAt:  &Timestamp{T: uint32(time.Now().Unix())},
+		CreatedAt:  &mongo_facade.Timestamp{T: uint32(time.Now().Unix())},
 	}
+
 	if result, err = s.Storage.InsertOne(*s.Context, to_insert); err == nil {
 		identifier_field := s.Filter["Identifier"]
-		filter := BsonM{
+		filter := mongo_facade.BsonM{
 			identifier_field: result.InsertedID,
 		}
 		if err = s.Store.Storage.FindOne(*s.Context, filter).Decode(&inserted); err != nil {

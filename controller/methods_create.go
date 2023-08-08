@@ -7,6 +7,7 @@ import (
 	store_provider "github.com/small-entropy/go-backbone/providers/store"
 )
 
+// InsertOne
 // Метод создания записи
 func (c Controller[CONN, ID, DATA]) InsertOne(
 	data DATA,

@@ -3,17 +3,13 @@ package server
 import (
 	"github.com/small-entropy/go-backbone/database/abstract"
 
-	"github.com/labstack/echo/v4"
+	echo_facade "github.com/small-entropy/go-backbone/facades/echo"
 )
-
-type Echo = echo.Echo
-
-type EchoHandlerFunc = echo.HandlerFunc
 
 type RoutesOptions struct {
 	Path    string
 	Method  string
-	Handler EchoHandlerFunc
+	Handler echo_facade.EchoHandlerFunc
 }
 
 type ServerSettings struct {
@@ -23,6 +19,6 @@ type ServerSettings struct {
 }
 
 type Server struct {
-	Core     Echo
+	Core     echo_facade.Echo
 	Settings ServerSettings
 }

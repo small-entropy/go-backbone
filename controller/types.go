@@ -7,7 +7,7 @@ import (
 	"github.com/small-entropy/go-backbone/stores/abstract"
 
 	"github.com/go-playground/validator/v10"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	mongo_facade "github.com/small-entropy/go-backbone/facades/mongo"
 )
 
 type Controller[CONN any, ID any, DATA any] struct {
@@ -23,7 +23,7 @@ type IController[CONN any, ID any, DATA any] interface {
 	UpdateOne(filter map[string]interface{}, update DATA, provider *store_provider.StoreProvider[CONN, ID, DATA]) (record.Record[ID, DATA], error)
 	DeleteOne(filter map[string]interface{}, provider *store_provider.StoreProvider[CONN, ID, DATA]) (record.Record[ID, DATA], error)
 	EraseOne(filter map[string]interface{}, provider *store_provider.StoreProvider[CONN, ID, DATA]) (record.Record[ID, DATA], error)
-	GetTimeNow() primitive.Timestamp
+	GetTimeNow() mongo_facade.Timestamp
 	GetValidator() *validator.Validate
 	GetField(keys string) string
 }

@@ -23,6 +23,24 @@ type FindOptions = options.FindOptions
 
 type Cursor = mongo.Cursor
 
+type Collection = mongo.Collection
+
+type Client = mongo.Client
+
+type ClientOptions = options.ClientOptions
+
+type IndexModel = mongo.IndexModel
+
+type IndexOptions = options.IndexOptions
+
+var ErrNoDocuments = mongo.ErrNoDocuments
+
+var ErrNilDocument = mongo.ErrNilDocument
+
+func NewClient(opts ...*options.ClientOptions) (*Client, error) {
+	return mongo.NewClient(opts...)
+}
+
 func GetCountOptions() *CountOptions {
 	return options.Count()
 }
@@ -33,4 +51,12 @@ func GetFindOptions() *FindOptions {
 
 func NewObjectID() primitive.ObjectID {
 	return primitive.NewObjectID()
+}
+
+func GetClientOptions() *ClientOptions {
+	return options.Client()
+}
+
+func GetIndexOptions() *IndexOptions {
+	return options.Index()
 }

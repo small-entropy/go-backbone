@@ -2,12 +2,11 @@ package jsend
 
 import (
 	constants "github.com/small-entropy/go-backbone/constants/jsend"
-
-	"github.com/labstack/echo/v4"
+	echo_facade "github.com/small-entropy/go-backbone/facades/echo"
 )
 
 // Функция возврата ответа успешного выполнения
-func Success(data *echo.Map) *Response {
+func Success(data *echo_facade.Map) *Response {
 	return &Response{
 		Status: constants.SUCCESS,
 		Data:   data,
@@ -15,7 +14,7 @@ func Success(data *echo.Map) *Response {
 }
 
 // Функция возврата ответа не успешного выполнения
-func Fail(data *echo.Map) *Response {
+func Fail(data *echo_facade.Map) *Response {
 	return &Response{
 		Status: constants.FAILS,
 		Data:   data,
@@ -23,7 +22,7 @@ func Fail(data *echo.Map) *Response {
 }
 
 // Функция возврата ошибки
-func Error(message string, data *echo.Map, code int) *Response {
+func Error(message string, data *echo_facade.Map, code int) *Response {
 	return &Response{
 		Status:  constants.ERROR,
 		Message: message,
