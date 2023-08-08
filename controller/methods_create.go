@@ -7,6 +7,7 @@ import (
 	store_provider "github.com/small-entropy/go-backbone/providers/store"
 )
 
+// InsertOne
 // Метод создания записи
 func (c Controller[CONN, ID, DATA]) InsertOne(
 	data DATA,
@@ -14,6 +15,7 @@ func (c Controller[CONN, ID, DATA]) InsertOne(
 ) (record.Record[ID, DATA], error) {
 	var err error
 	var result record.Record[ID, DATA]
+
 	if result, err = provider.Store.InsertOne(data); err != nil {
 		err = &backbone_error.ControllerError[DATA]{
 			Status:  error_constants.ERR_CONTROLLER_CREATE,
@@ -22,5 +24,6 @@ func (c Controller[CONN, ID, DATA]) InsertOne(
 			Err:     err,
 		}
 	}
+
 	return result, err
 }
