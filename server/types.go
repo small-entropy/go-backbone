@@ -6,10 +6,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+type Echo = echo.Echo
+
+type EchoHandlerFunc = echo.HandlerFunc
+
 type RoutesOptions struct {
 	Path    string
 	Method  string
-	Handler echo.HandlerFunc
+	Handler EchoHandlerFunc
 }
 
 type ServerSettings struct {
@@ -19,6 +23,6 @@ type ServerSettings struct {
 }
 
 type Server struct {
-	Core     *echo.Echo
+	Core     Echo
 	Settings ServerSettings
 }

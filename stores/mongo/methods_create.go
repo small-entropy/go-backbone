@@ -6,25 +6,21 @@ import (
 	backbone_error "github.com/small-entropy/go-backbone/error"
 
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Метод вставки в коллекцию документа
-func (s *MongoStore[DATA]) InsertOne(data DATA) (record.Record[primitive.ObjectID, DATA], error) {
+func (s *MongoStore[DATA]) InsertOne(data DATA) (record.Record[ObjectID, DATA], error) {
 	var err error
-	var result *mongo.InsertOneResult
-	var inserted record.Record[primitive.ObjectID, DATA]
-	to_insert := &record.Record[primitive.ObjectID, DATA]{
-		Identifier: primitive.NewObjectID(),
+	var result *InsertOneResult
+	var inserted record.Record[ObjectID, DATA]
+	to_insert := &record.Record[ObjectID, DATA]{
+		Identifier: NewObjectID(),
 		Data:       data,
-		CreatedAt:  &primitive.Timestamp{T: uint32(time.Now().Unix())},
+		CreatedAt:  &Timestamp{T: uint32(time.Now().Unix())},
 	}
 	if result, err = s.Storage.InsertOne(*s.Context, to_insert); err == nil {
 		identifier_field := s.Filter["Identifier"]
-		filter := bson.M{
+		filter := BsonM{
 			identifier_field: result.InsertedID,
 		}
 		if err = s.Store.Storage.FindOne(*s.Context, filter).Decode(&inserted); err != nil {

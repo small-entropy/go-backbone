@@ -4,8 +4,6 @@ import (
 	error_constants "github.com/small-entropy/go-backbone/constants/error"
 	backbone_error "github.com/small-entropy/go-backbone/error"
 	"github.com/small-entropy/go-backbone/utils/convert"
-
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Метод получения количества записей с учетом фильтра
@@ -14,7 +12,7 @@ func (s *MongoStore[DATA]) GetCount(filter_map map[string]interface{}) (int64, e
 	var err error
 
 	filter := convert.MapToBsonM(filter_map)
-	opts := options.Count()
+	opts := GetCountOptions()
 
 	if count, err = s.Storage.CountDocuments(*s.Context, filter, opts); err != nil {
 		err = &backbone_error.StoreError{

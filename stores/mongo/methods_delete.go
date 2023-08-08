@@ -5,14 +5,12 @@ import (
 	"github.com/small-entropy/go-backbone/datatypes/record"
 	backbone_error "github.com/small-entropy/go-backbone/error"
 	"github.com/small-entropy/go-backbone/utils/convert"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Метод удаления записи из коллекции
-func (s *MongoStore[DATA]) DeleteOne(filter map[string]interface{}) (record.Record[primitive.ObjectID, DATA], error) {
+func (s *MongoStore[DATA]) DeleteOne(filter map[string]interface{}) (record.Record[ObjectID, DATA], error) {
 	var err error
-	var result record.Record[primitive.ObjectID, DATA]
+	var result record.Record[ObjectID, DATA]
 	filter_bson := convert.MapToBsonM(filter)
 	if result, err = s.FindOne(filter_bson); err == nil {
 		_, err = s.Storage.DeleteOne(*s.Context, filter_bson)
