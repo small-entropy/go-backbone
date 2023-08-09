@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	"github.com/small-entropy/go-backbone/controller"
-	"github.com/small-entropy/go-backbone/datatypes/record"
-	"github.com/small-entropy/go-backbone/datatypes/recordset"
-	store_provider "github.com/small-entropy/go-backbone/providers/store"
-	"github.com/small-entropy/go-backbone/response/jsend"
+	"github.com/small-entropy/go-backbone/pkg/controller"
+	"github.com/small-entropy/go-backbone/pkg/datatypes/record"
+	"github.com/small-entropy/go-backbone/pkg/datatypes/recordset"
+	provider "github.com/small-entropy/go-backbone/pkg/provider/store"
+	"github.com/small-entropy/go-backbone/pkg/response/jsend"
 )
 
 type Fields struct {
@@ -19,7 +19,7 @@ type Fields struct {
 
 type Callbacks[CONN any, ID any, DATA any, DTO any] struct {
 	GetIdentifierFromString func(value string) (ID, error)
-	GetProvider             func(ctx context.Context, storageName string) (store_provider.StoreProvider[CONN, ID, DATA], error)
+	GetProvider             func(ctx context.Context, storageName string) (provider.StoreProvider[CONN, ID, DATA], error)
 	Fill                    func(dto DTO) (DATA, error)
 }
 

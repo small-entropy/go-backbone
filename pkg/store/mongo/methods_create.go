@@ -25,9 +25,9 @@ func (s *MongoStore[DATA]) InsertOne(data DATA) (record.Record[facade.ObjectID, 
 	}
 
 	if result, err = s.Storage.InsertOne(*s.Context, toInsert); err == nil {
-		identifier_field := s.Filter["Identifier"]
+		identifierField := s.Filter["Identifier"]
 		filter := facade.BsonM{
-			identifier_field: result.InsertedID,
+			identifierField: result.InsertedID,
 		}
 		if err = s.Store.Storage.FindOne(*s.Context, filter).Decode(&inserted); err != nil {
 			err = &errors.StoreError{

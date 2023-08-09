@@ -3,17 +3,17 @@ package handler
 import (
 	"net/http"
 
-	error_constants "github.com/small-entropy/go-backbone/constants/error"
-	"github.com/small-entropy/go-backbone/datatypes/record"
-	backbone_error "github.com/small-entropy/go-backbone/error"
-	echo_facade "github.com/small-entropy/go-backbone/facade/echo"
-	store_provider "github.com/small-entropy/go-backbone/providers/store"
-	"github.com/small-entropy/go-backbone/response/jsend"
+	constants "github.com/small-entropy/go-backbone/internal/constants/error"
+	"github.com/small-entropy/go-backbone/pkg/datatypes/record"
+	errors "github.com/small-entropy/go-backbone/pkg/error"
+	provider "github.com/small-entropy/go-backbone/pkg/provider/store"
+	"github.com/small-entropy/go-backbone/pkg/response/jsend"
+	facade "github.com/small-entropy/go-backbone/third_party/facade/echo"
 )
 
 // UpdateOne
 // Обработчик обновления одной записи
-func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo_facade.Context) error {
+func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c facade.Context) error {
 	var err error
 	var result record.Record[ID, DATA]
 	var response *jsend.Response
@@ -23,15 +23,15 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo_facade.Context) error {
 
 	var param string
 	if param, err = h.GetParamField("Id"); err == nil {
-		id_str := c.Param(param)
+		idStr := c.Param(param)
 
 		ctx, cancel := h.GetRequestContext(&c)
 		defer cancel()
 
-		var provider store_provider.StoreProvider[CONN, ID, DATA]
-		if provider, err = h.Callbacks.GetProvider(ctx, h.Settings.StorageName); err == nil {
+		var prov provider.StoreProvider[CONN, ID, DATA]
+		if prov, err = h.Callbacks.GetProvider(ctx, h.Settings.StorageName); err == nil {
 			var identifier ID
-			if identifier, err = h.Callbacks.GetIdentifierFromString(id_str); err == nil {
+			if identifier, err = h.Callbacks.GetIdentifierFromString(idStr); err == nil {
 				var dto DTO
 				if dto, err = h.GetDTO(&c); err == nil {
 					var update DATA
@@ -39,7 +39,7 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo_facade.Context) error {
 						filter := map[string]interface{}{
 							h.Settings.Fields.Filter["Identifier"]: identifier,
 						}
-						if result, err = h.Settings.Controller.UpdateOne(filter, update, &provider); err == nil {
+						if result, err = h.Settings.Controller.UpdateOne(filter, update, &prov); err == nil {
 							if h.Responses.UpdateOne != nil {
 								response = h.Responses.UpdateOne(&ctx, h, &result)
 							} else {
@@ -49,69 +49,69 @@ func (h *Handler[CONN, ID, DATA, DTO]) UpdateOne(c echo_facade.Context) error {
 								} else {
 									data = result
 								}
-								response = jsend.Success(&echo_facade.Map{
+								response = jsend.Success(&facade.Map{
 									field: data,
 								})
 							}
 						} else {
 							code = http.StatusInternalServerError
-							err = &backbone_error.HandlerError{
-								Status:  error_constants.ERR_HANDLER_UPDATE,
+							err = &errors.HandlerError{
+								Status:  constants.ErrHandlerUpdate,
 								Code:    code,
-								Message: error_constants.MSG_HANDLER_UPDATE,
+								Message: constants.MsgHandlerUpdate,
 								Err:     err,
 							}
-							response = jsend.Fail(&echo_facade.Map{field: err.Error()})
+							response = jsend.Fail(&facade.Map{field: err.Error()})
 						}
 					} else {
 						code = http.StatusBadRequest
-						err = &backbone_error.HandlerError{
-							Status:  error_constants.ERR_HANDLER_FILL,
+						err = &errors.HandlerError{
+							Status:  constants.ErrHandlerFill,
 							Code:    code,
-							Message: error_constants.MSG_HANDLER_FILL,
+							Message: constants.MsgHandlerFill,
 							Err:     err,
 						}
-						response = jsend.Fail(&echo_facade.Map{field: err.Error()})
+						response = jsend.Fail(&facade.Map{field: err.Error()})
 					}
 				} else {
 					code = http.StatusBadRequest
-					err = &backbone_error.HandlerError{
-						Status:  error_constants.ERR_HANDLER_DTO,
+					err = &errors.HandlerError{
+						Status:  constants.ErrHandlerDto,
 						Code:    code,
-						Message: error_constants.MSG_HANDLER_DTO,
+						Message: constants.MsgHandlerDto,
 						Err:     err,
 					}
-					response = jsend.Fail(&echo_facade.Map{field: err.Error()})
+					response = jsend.Fail(&facade.Map{field: err.Error()})
 				}
 			} else {
 				code = http.StatusBadRequest
-				err = &backbone_error.HandlerError{
-					Status:  error_constants.ERR_HANDLER_CONVERT_ID,
+				err = &errors.HandlerError{
+					Status:  constants.ErrHandlerConvertID,
 					Code:    code,
-					Message: error_constants.MSG_HANDLER_CONVERT_ID,
+					Message: constants.MsgHandlerConvertID,
 					Err:     err,
 				}
-				response = jsend.Fail(&echo_facade.Map{field: err.Error()})
+				response = jsend.Fail(&facade.Map{field: err.Error()})
 			}
 		} else {
 			code = http.StatusInternalServerError
-			err = &backbone_error.HandlerError{
-				Status:  error_constants.ERR_HANDLER_PROVIDER,
+			err = &errors.HandlerError{
+				Status:  constants.ErrHandlerProvider,
 				Code:    code,
-				Message: error_constants.MSG_HANDLER_PROVIDER,
+				Message: constants.MsgHandlerProvider,
 				Err:     err,
 			}
-			response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field: err.Error()}, code)
+			response = jsend.Error(constants.MsgHandlerProvider, &facade.Map{field: err.Error()}, code)
 		}
 	} else {
 		code = http.StatusBadRequest
-		err = &backbone_error.HandlerError{
-			Status:  error_constants.ERR_HANDLER_PARAMS,
+		err = &errors.HandlerError{
+			Status:  constants.ErrHandlerParams,
 			Code:    code,
-			Message: error_constants.MSG_HANDLER_PARAMS,
+			Message: constants.MsgHandlerParams,
 			Err:     err,
 		}
-		response = jsend.Fail(&echo_facade.Map{field: err.Error()})
+		response = jsend.Fail(&facade.Map{field: err.Error()})
 	}
 	return c.JSON(code, response)
 }

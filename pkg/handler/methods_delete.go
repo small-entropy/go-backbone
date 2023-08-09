@@ -3,17 +3,17 @@ package handler
 import (
 	"net/http"
 
-	error_constants "github.com/small-entropy/go-backbone/constants/error"
-	"github.com/small-entropy/go-backbone/datatypes/record"
-	backbone_error "github.com/small-entropy/go-backbone/error"
-	"github.com/small-entropy/go-backbone/response/jsend"
+	constants "github.com/small-entropy/go-backbone/internal/constants/error"
+	"github.com/small-entropy/go-backbone/pkg/datatypes/record"
+	errors "github.com/small-entropy/go-backbone/pkg/error"
+	"github.com/small-entropy/go-backbone/pkg/response/jsend"
 
-	echo_facade "github.com/small-entropy/go-backbone/facade/echo"
+	facade "github.com/small-entropy/go-backbone/third_party/facade/echo"
 )
 
 // DeleteOne
 // Обработчик мягкого удаления
-func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo_facade.Context) error {
+func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c facade.Context) error {
 	var err error
 	var result record.Record[ID, DATA]
 	var response *jsend.Response
@@ -21,11 +21,11 @@ func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo_facade.Context) error {
 	code := http.StatusOK
 	field := h.GetResponseField("Entity")
 
-	var param_field string
-	if param_field, err = h.GetParamField("Id"); err == nil {
+	var paramField string
+	if paramField, err = h.GetParamField("Id"); err == nil {
 		var identifier ID
-		id_str := c.Param(param_field)
-		if identifier, err = h.Callbacks.GetIdentifierFromString(id_str); err == nil {
+		idStr := c.Param(paramField)
+		if identifier, err = h.Callbacks.GetIdentifierFromString(idStr); err == nil {
 			ctx, cancel := h.GetRequestContext(&c)
 			defer cancel()
 
@@ -43,54 +43,54 @@ func (h *Handler[CONN, ID, DATA, DTO]) DeleteOne(c echo_facade.Context) error {
 						} else {
 							data = result
 						}
-						response = jsend.Success(&echo_facade.Map{field: data})
+						response = jsend.Success(&facade.Map{field: data})
 					}
 				} else {
 					code = http.StatusInternalServerError
-					err = &backbone_error.HandlerError{
-						Status:  error_constants.ERR_HANDLER_DELETE,
+					err = &errors.HandlerError{
+						Status:  constants.ErrHandlerDelete,
 						Code:    code,
-						Message: error_constants.MSG_HANDLER_DELETE,
+						Message: constants.MsgHandlerDelete,
 						Err:     err,
 					}
-					response = jsend.Error(error_constants.MSG_HANDLER_DELETE, &echo_facade.Map{field: err.Error()}, code)
+					response = jsend.Error(constants.MsgHandlerDelete, &facade.Map{field: err.Error()}, code)
 				}
 			} else {
 				code = http.StatusInternalServerError
-				err = &backbone_error.HandlerError{
-					Status:  error_constants.ERR_HANDLER_PROVIDER,
+				err = &errors.HandlerError{
+					Status:  constants.ErrHandlerProvider,
 					Code:    code,
-					Message: error_constants.MSG_HANDLER_PROVIDER,
+					Message: constants.MsgHandlerProvider,
 					Err:     err,
 				}
-				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field: err.Error()}, code)
+				response = jsend.Error(constants.MsgHandlerProvider, &facade.Map{field: err.Error()}, code)
 			}
 		} else {
 			code = http.StatusBadRequest
-			err = &backbone_error.HandlerError{
-				Status:  error_constants.ERR_HANDLER_CONVERT_ID,
+			err = &errors.HandlerError{
+				Status:  constants.ErrHandlerConvertID,
 				Code:    code,
-				Message: error_constants.MSG_HANDLER_CONVERT_ID,
+				Message: constants.ErrHandlerConvertID,
 				Err:     err,
 			}
-			response = jsend.Fail(&echo_facade.Map{field: err.Error()})
+			response = jsend.Fail(&facade.Map{field: err.Error()})
 		}
 	} else {
 		code = http.StatusBadRequest
-		err = &backbone_error.HandlerError{
-			Status:  error_constants.ERR_HANDLER_PARAMS,
+		err = &errors.HandlerError{
+			Status:  constants.ErrHandlerParams,
 			Code:    code,
-			Message: error_constants.MSG_HANDLER_PARAMS,
+			Message: constants.MsgHandlerParams,
 			Err:     err,
 		}
-		response = jsend.Fail(&echo_facade.Map{field: err.Error()})
+		response = jsend.Fail(&facade.Map{field: err.Error()})
 	}
 	return c.JSON(code, response)
 }
 
 // EraseOne
 // Обработчик перманентного удаления
-func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo_facade.Context) error {
+func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c facade.Context) error {
 	var err error
 	var response *jsend.Response
 	var result record.Record[ID, DATA]
@@ -98,11 +98,11 @@ func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo_facade.Context) error {
 	code := http.StatusOK
 	field := h.GetResponseField("Entity")
 
-	var param_field string
-	if param_field, err = h.GetParamField("Id"); err == nil {
+	var paramField string
+	if paramField, err = h.GetParamField("Id"); err == nil {
 		var identifier ID
-		id_str := c.Param(param_field)
-		if identifier, err = h.Callbacks.GetIdentifierFromString(id_str); err == nil {
+		idStr := c.Param(paramField)
+		if identifier, err = h.Callbacks.GetIdentifierFromString(idStr); err == nil {
 			ctx, cancel := h.GetRequestContext(&c)
 			defer cancel()
 			filter := map[string]interface{}{
@@ -119,47 +119,47 @@ func (h *Handler[CONN, ID, DATA, DTO]) EraseOne(c echo_facade.Context) error {
 						} else {
 							data = result
 						}
-						response = jsend.Success(&echo_facade.Map{field: data})
+						response = jsend.Success(&facade.Map{field: data})
 					}
 				} else {
 					code = http.StatusInternalServerError
-					err = &backbone_error.HandlerError{
-						Status:  error_constants.ERR_HANDLER_ERASE,
+					err = &errors.HandlerError{
+						Status:  constants.ErrHandlerErase,
 						Code:    code,
-						Message: error_constants.MSG_HANDLER_ERASE,
+						Message: constants.MsgHandlerErase,
 						Err:     err,
 					}
-					response = jsend.Error(error_constants.MSG_HANDLER_ERASE, &echo_facade.Map{field: err.Error()}, code)
+					response = jsend.Error(constants.MsgHandlerErase, &facade.Map{field: err.Error()}, code)
 				}
 			} else {
 				code = http.StatusInternalServerError
-				err = &backbone_error.HandlerError{
-					Status:  error_constants.ERR_HANDLER_PROVIDER,
+				err = &errors.HandlerError{
+					Status:  constants.ErrHandlerProvider,
 					Code:    code,
-					Message: error_constants.MSG_HANDLER_PROVIDER,
+					Message: constants.MsgHandlerProvider,
 					Err:     err,
 				}
-				response = jsend.Error(error_constants.MSG_HANDLER_PROVIDER, &echo_facade.Map{field: err.Error()}, code)
+				response = jsend.Error(constants.MsgHandlerProvider, &facade.Map{field: err.Error()}, code)
 			}
 		} else {
 			code = http.StatusBadRequest
-			err = &backbone_error.HandlerError{
-				Status:  error_constants.ERR_HANDLER_CONVERT_ID,
+			err = &errors.HandlerError{
+				Status:  constants.ErrHandlerConvertID,
 				Code:    code,
-				Message: error_constants.MSG_HANDLER_CONVERT_ID,
+				Message: constants.MsgHandlerConvertID,
 				Err:     err,
 			}
-			response = jsend.Fail(&echo_facade.Map{field: err.Error()})
+			response = jsend.Fail(&facade.Map{field: err.Error()})
 		}
 	} else {
 		code = http.StatusBadRequest
-		err = &backbone_error.HandlerError{
-			Status:  error_constants.ERR_HANDLER_PARAMS,
+		err = &errors.HandlerError{
+			Status:  constants.ErrHandlerParams,
 			Code:    code,
-			Message: error_constants.MSG_HANDLER_PARAMS,
+			Message: constants.MsgHandlerParams,
 			Err:     err,
 		}
-		response = jsend.Fail(&echo_facade.Map{field: err.Error()})
+		response = jsend.Fail(&facade.Map{field: err.Error()})
 	}
 	return c.JSON(code, response)
 }

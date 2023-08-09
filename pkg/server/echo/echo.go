@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/small-entropy/go-backbone/pkg/server/abstract"
+	"github.com/small-entropy/go-backbone/internal/server/abstract"
 
 	facade "github.com/small-entropy/go-backbone/third_party/facade/echo"
 

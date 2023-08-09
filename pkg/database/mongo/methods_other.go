@@ -9,6 +9,7 @@ import (
 	facade "github.com/small-entropy/go-backbone/third_party/facade/mongo"
 )
 
+// Connect
 // Метод для установления соединения с репозиторием
 func (m *MongoBD) Connect(uri string, database string) error {
 	var err error
@@ -52,12 +53,14 @@ func (m *MongoBD) Connect(uri string, database string) error {
 	return err
 }
 
+// GetStorage
 // Метод для получения хранилища данных
 func (m *MongoBD) GetStorage(ctx *context.Context, store_name string) *facade.Collection {
 	collection := m.Client.Database(m.Name).Collection(store_name)
 	return collection
 }
 
+// CreateIndexes
 // Метод создания индексов для коллекций
 func (m *MongoBD) CreateIndexes(opts []abstract.IndexOptions) error {
 	var err error
@@ -73,6 +76,7 @@ func (m *MongoBD) CreateIndexes(opts []abstract.IndexOptions) error {
 	return err
 }
 
+// CreateIndex
 // Метод создания индекса для коллекции
 func (m *MongoBD) CreateIndex(ctx context.Context, collectionName string, indexName string, unique bool) error {
 	var err error

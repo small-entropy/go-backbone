@@ -61,19 +61,19 @@ func (s *MongoStore[DATA]) FindOne(filter map[string]interface{}) (record.Record
 	currentFilter := convert.MapToBsonM(filter)
 
 	if err = s.Storage.FindOne(*s.Context, currentFilter).Decode(&result); err != nil {
-		var err_status string
+		var status string
 
 		switch err {
 		case facade.ErrNoDocuments:
-			err_status = constants.ErrStoreRead
+			status = constants.ErrStoreRead
 		case facade.ErrNilDocument:
-			err_status = constants.ErrStoreRead
+			status = constants.ErrStoreRead
 		default:
-			err_status = constants.ErrStoreUnknown
+			status = constants.ErrStoreUnknown
 		}
 
 		err = &errors.StoreError{
-			Status:       err_status,
+			Status:       status,
 			StorageName:  s.Storage.Name(),
 			DatabaseName: s.Storage.Database().Name(),
 			Err:          err,
