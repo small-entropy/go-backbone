@@ -5,13 +5,13 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
-	mongo_facade "github.com/small-entropy/go-backbone/facade/mongo"
+	facade "github.com/small-entropy/go-backbone/third_party/facade/mongo"
 )
 
 // GetTimeNow
 // Метод получения текущей даты в формате Timestamp
-func (c *Controller[CONN, ID, DATA]) GetTimeNow() mongo_facade.Timestamp {
-	now := mongo_facade.Timestamp{T: uint32(time.Now().Unix())}
+func (c *Controller[CONN, ID, DATA]) GetTimeNow() facade.Timestamp {
+	now := facade.Timestamp{T: uint32(time.Now().Unix())}
 	return now
 }
 

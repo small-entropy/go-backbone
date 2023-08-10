@@ -3,12 +3,12 @@ package controller
 import (
 	"sync"
 
-	error_constants "github.com/small-entropy/go-backbone/constants/error"
-	"github.com/small-entropy/go-backbone/datatypes/record"
-	"github.com/small-entropy/go-backbone/datatypes/recordset"
-	backbone_error "github.com/small-entropy/go-backbone/error"
-	store_provider "github.com/small-entropy/go-backbone/providers/store"
-	"github.com/small-entropy/go-backbone/stores/abstract"
+	constants "github.com/small-entropy/go-backbone/internal/constants/error"
+	"github.com/small-entropy/go-backbone/pkg/datatypes/record"
+	"github.com/small-entropy/go-backbone/pkg/datatypes/recordset"
+	errors "github.com/small-entropy/go-backbone/pkg/error"
+	prov "github.com/small-entropy/go-backbone/pkg/provider/store"
+	"github.com/small-entropy/go-backbone/pkg/store/abstract"
 )
 
 // FindOne
@@ -17,7 +17,7 @@ func (c *Controller[CONN, ID, DATA]) FindOne(
 	identifier ID,
 	deleted bool,
 	other_filters *map[string]interface{},
-	provider *store_provider.StoreProvider[CONN, ID, DATA],
+	provider *prov.StoreProvider[CONN, ID, DATA],
 ) (record.Record[ID, DATA], error) {
 	var err error
 	var result record.Record[ID, DATA]
@@ -32,9 +32,9 @@ func (c *Controller[CONN, ID, DATA]) FindOne(
 	}
 
 	if result, err = provider.Store.FindOne(filter); err != nil {
-		err = &backbone_error.ControllerError[DATA]{
-			Status:  error_constants.ERR_CONTROLLER_READ,
-			Message: error_constants.MSG_CONTROLLER_READ,
+		err = &errors.ControllerError[DATA]{
+			Status:  constants.ErrControllerRead,
+			Message: constants.MsgControllerRead,
 			Filter:  &filter,
 			Err:     err,
 		}
@@ -46,15 +46,15 @@ func (c *Controller[CONN, ID, DATA]) FindOne(
 // Метод получения одной записи по фильтрам
 func (c *Controller[CONN, ID, DATA]) FindOneByFilter(
 	filter map[string]interface{},
-	provider *store_provider.StoreProvider[CONN, ID, DATA],
+	provider *prov.StoreProvider[CONN, ID, DATA],
 ) (record.Record[ID, DATA], error) {
 	var err error
 	var result record.Record[ID, DATA]
 
 	if result, err = provider.Store.FindOne(filter); err != nil {
-		err = &backbone_error.ControllerError[DATA]{
-			Status:  error_constants.ERR_CONTROLLER_READ,
-			Message: error_constants.MSG_CONTROLLER_READ,
+		err = &errors.ControllerError[DATA]{
+			Status:  constants.ErrControllerRead,
+			Message: constants.MsgControllerRead,
 			Filter:  &filter,
 			Err:     err,
 		}
@@ -67,7 +67,7 @@ func (c *Controller[CONN, ID, DATA]) FindOneByFilter(
 func (c *Controller[CONN, ID, DATA]) Find(
 	filter map[string]interface{},
 	page *abstract.Page,
-	provider *store_provider.StoreProvider[CONN, ID, DATA],
+	provider *prov.StoreProvider[CONN, ID, DATA],
 ) (recordset.RecordSet[ID, DATA], error) {
 	var err error
 	var result recordset.RecordSet[ID, DATA]
@@ -79,9 +79,9 @@ func (c *Controller[CONN, ID, DATA]) Find(
 	wg.Add(2)
 	go func() {
 		if total, err_total = provider.Store.GetCount(filter); err_total != nil {
-			err = &backbone_error.ControllerError[DATA]{
-				Status:  error_constants.ERR_CONTROLLER_TOTAL,
-				Message: error_constants.MSG_CONTROLLER_TOTAL,
+			err = &errors.ControllerError[DATA]{
+				Status:  constants.ErrControllerTotal,
+				Message: constants.MsgControllerTotal,
 				Filter:  &filter,
 				Err:     err,
 			}
@@ -90,9 +90,9 @@ func (c *Controller[CONN, ID, DATA]) Find(
 	}()
 	go func() {
 		if result, err_read = provider.Store.FindAll(*page, filter); err_read != nil {
-			err = &backbone_error.ControllerError[DATA]{
-				Status:  error_constants.ERR_CONTROLLER_READ,
-				Message: error_constants.MSG_CONTROLLER_READ,
+			err = &errors.ControllerError[DATA]{
+				Status:  constants.ErrControllerRead,
+				Message: constants.MsgControllerRead,
 				Filter:  &filter,
 				Err:     err,
 			}
