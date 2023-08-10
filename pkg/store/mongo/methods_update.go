@@ -3,8 +3,6 @@ package mongo
 import (
 	constants "github.com/small-entropy/go-backbone/internal/constants/error"
 
-	"github.com/small-entropy/go-backbone/pkg/datatypes/record"
-	"github.com/small-entropy/go-backbone/pkg/datatypes/recordset"
 	errors "github.com/small-entropy/go-backbone/pkg/error"
 
 	facade "github.com/small-entropy/go-backbone/third_party/facade/mongo"
@@ -14,9 +12,9 @@ import (
 
 // UpdateOne
 // Метод обновления одного документа в коллекции
-func (s *MongoStore[DATA]) UpdateOne(filter map[string]interface{}, update map[string]interface{}) (record.Record[facade.ObjectID, DATA], error) {
+func (s *Store[DATA]) UpdateOne(filter map[string]interface{}, update map[string]interface{}) (Document[DATA], error) {
 	var err error
-	var result record.Record[facade.ObjectID, DATA]
+	var result Document[DATA]
 
 	currentFilter := convert.MapToBsonM(filter)
 	/// Собираем структуру для обновления
@@ -43,10 +41,10 @@ func (s *MongoStore[DATA]) UpdateOne(filter map[string]interface{}, update map[s
 
 // UpdateMany
 // Метод обновления нескольких документов в коллекции
-func (s *MongoStore[DATA]) UpdateMany(filter map[string]interface{}, update map[string]interface{}) (recordset.RecordSet[facade.ObjectID, DATA], error) {
+func (s *Store[DATA]) UpdateMany(filter map[string]interface{}, update map[string]interface{}) (DocumentSet[DATA], error) {
 	var err error
-	var results recordset.RecordSet[facade.ObjectID, DATA]
-	var records []record.Record[facade.ObjectID, DATA]
+	var results DocumentSet[DATA]
+	var records []Document[DATA]
 	// Собираем BsonM структуры по картам
 	/// Формируем структуру для фильтра
 	currentFilter := convert.MapToBsonM(filter)

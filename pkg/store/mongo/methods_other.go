@@ -12,7 +12,7 @@ import (
 
 // GetCount
 // Метод получения количества записей с учетом фильтра
-func (s *MongoStore[DATA]) GetCount(filter map[string]interface{}) (int64, error) {
+func (s *Store[DATA]) GetCount(filter map[string]interface{}) (int64, error) {
 	var count int64
 	var err error
 

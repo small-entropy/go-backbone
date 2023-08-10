@@ -2,6 +2,6 @@ package store
 
 import "github.com/small-entropy/go-backbone/pkg/store/abstract"
 
-func (sp *StoreProvider[CONN, ID, DATA]) GetStore() abstract.IStore[ID, DATA] {
-	return sp.Store
+func (p *Provider[CONN, ID, DATA, DATETIME, ENTITY]) GetStore() abstract.IStore[ID, DATA, DATETIME, ENTITY] {
+	return p.Store
 }

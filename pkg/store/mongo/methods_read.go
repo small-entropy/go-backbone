@@ -5,8 +5,6 @@ import (
 
 	facade "github.com/small-entropy/go-backbone/third_party/facade/mongo"
 
-	"github.com/small-entropy/go-backbone/pkg/datatypes/record"
-	"github.com/small-entropy/go-backbone/pkg/datatypes/recordset"
 	errors "github.com/small-entropy/go-backbone/pkg/error"
 	"github.com/small-entropy/go-backbone/pkg/store/abstract"
 
@@ -15,15 +13,15 @@ import (
 
 // FindAll
 // Метод поиска получения списка документов из коллекции
-func (s *MongoStore[DATA]) FindAll(page abstract.Page, filter map[string]interface{}) (recordset.RecordSet[facade.ObjectID, DATA], error) {
+func (s *Store[DATA]) FindAll(page abstract.Page, filter map[string]interface{}) (DocumentSet[DATA], error) {
 	var err error
 	var cursor *facade.Cursor
-	var results recordset.RecordSet[facade.ObjectID, DATA]
-	var records []record.Record[facade.ObjectID, DATA]
+	var results DocumentSet[DATA]
+	var records []Document[DATA]
 
-	results.Meta.Filter = filter
-	results.Meta.Limit = page.Limit
-	results.Meta.Skip = page.Skip
+	results.Meta().Filter = filter
+	results.Meta().Limit = page.Limit
+	results.Meta().Skip = page.Skip
 	// TODO: добавить сортировку
 	opts := facade.GetFindOptions().SetSort(facade.BsonD{}).SetSkip(page.Skip).SetLimit(page.Limit)
 
@@ -54,9 +52,9 @@ func (s *MongoStore[DATA]) FindAll(page abstract.Page, filter map[string]interfa
 
 // FindOne
 // Метод получения одного документа из коллекции
-func (s *MongoStore[DATA]) FindOne(filter map[string]interface{}) (record.Record[facade.ObjectID, DATA], error) {
+func (s *Store[DATA]) FindOne(filter map[string]interface{}) (Document[DATA], error) {
 	var err error
-	var result record.Record[facade.ObjectID, DATA]
+	var result Document[DATA]
 
 	currentFilter := convert.MapToBsonM(filter)
 

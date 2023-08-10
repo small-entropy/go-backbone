@@ -3,7 +3,6 @@ package mongo
 import (
 	constants "github.com/small-entropy/go-backbone/internal/constants/error"
 
-	"github.com/small-entropy/go-backbone/pkg/datatypes/record"
 	errors "github.com/small-entropy/go-backbone/pkg/error"
 
 	facade "github.com/small-entropy/go-backbone/third_party/facade/mongo"
@@ -13,12 +12,12 @@ import (
 
 // InsertOne
 // Метод вставки в коллекцию документа
-func (s *MongoStore[DATA]) InsertOne(data DATA) (record.Record[facade.ObjectID, DATA], error) {
+func (s *Store[DATA]) InsertOne(data DATA) (Document[DATA], error) {
 	var err error
 	var result *facade.InsertOneResult
-	var inserted record.Record[facade.ObjectID, DATA]
+	var inserted Document[DATA]
 
-	toInsert := &record.Record[facade.ObjectID, DATA]{
+	toInsert := &Document[DATA]{
 		Identifier: facade.NewObjectID(),
 		Data:       data,
 		CreatedAt:  &facade.Timestamp{T: uint32(time.Now().Unix())},

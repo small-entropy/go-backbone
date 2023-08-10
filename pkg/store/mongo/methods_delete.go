@@ -3,8 +3,6 @@ package mongo
 import (
 	constants "github.com/small-entropy/go-backbone/internal/constants/error"
 
-	"github.com/small-entropy/go-backbone/pkg/datatypes/record"
-	"github.com/small-entropy/go-backbone/pkg/datatypes/recordset"
 	errors "github.com/small-entropy/go-backbone/pkg/error"
 
 	facade "github.com/small-entropy/go-backbone/third_party/facade/mongo"
@@ -14,9 +12,9 @@ import (
 
 // DeleteOne
 // Метод удаления записи из коллекции
-func (s *MongoStore[DATA]) DeleteOne(filter map[string]interface{}) (record.Record[facade.ObjectID, DATA], error) {
+func (s *Store[DATA]) DeleteOne(filter map[string]interface{}) (Document[DATA], error) {
 	var err error
-	var result record.Record[facade.ObjectID, DATA]
+	var result Document[DATA]
 
 	currentFilter := convert.MapToBsonM(filter)
 
@@ -36,10 +34,10 @@ func (s *MongoStore[DATA]) DeleteOne(filter map[string]interface{}) (record.Reco
 
 // DeleteMany
 // Метод удаления списка записей из коллекции по фильтру
-func (s *MongoStore[DATA]) DeleteMany(filter map[string]interface{}) (recordset.RecordSet[facade.ObjectID, DATA], error) {
+func (s *Store[DATA]) DeleteMany(filter map[string]interface{}) (DocumentSet[DATA], error) {
 	var err error
-	var results recordset.RecordSet[facade.ObjectID, DATA]
-	var records []record.Record[facade.ObjectID, DATA]
+	var results DocumentSet[DATA]
+	var records []Document[DATA]
 
 	currentFilter := convert.MapToBsonM(filter)
 
