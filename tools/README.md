@@ -1,4 +1,2 @@
 # /tools
-Supporting tools for this project. Note that these tools can import code from the /pkg and /internal directories.
-
-See the /tools directory for examples.
+Вспомогательные утилиты Go Backbone. Модули могут вызывать как в /pkg, так и в /internal.
