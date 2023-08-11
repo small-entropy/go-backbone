@@ -1,4 +1,4 @@
-package controller
+package mongo
 
 import (
 	constants "github.com/small-entropy/go-backbone/internal/constants/error"
@@ -9,7 +9,7 @@ import (
 
 // InsertOne
 // Метод создания записи
-func (c Controller[CONN, ID, DATA]) InsertOne(
+func (c Controller[DATA, ENTITY]) InsertOne(
 	data DATA,
 	provider *prov.StoreProvider[CONN, ID, DATA],
 ) (record.Record[ID, DATA], error) {

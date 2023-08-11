@@ -21,7 +21,7 @@ type Page struct {
 
 type IStore[ID any, DATA any, DATETIME any, ENTITY any] interface {
 	GetCount(filter map[string]interface{}) (int64, error)                                                                   // Получить количество записей по фильтру
-	InsertOne(data DATA) (interfaces.ISet[ENTITY], error)                                                                                     // Вставить одну запись в хранилище
+	InsertOne(data DATA) (interfaces.ISet[ENTITY], error)                                                                    // Вставить одну запись в хранилище
 	InsertMany(data []DATA) (interfaces.ISet[ENTITY], error)                                                                 // Вставить несколько записей в хранилище
 	FindOne(filter map[string]interface{}) (interfaces.ISchema[ID, DATA, DATETIME], error)                                   // Найти одну запись в хранилище по фильтру
 	FindAll(page Page, filter map[string]interface{}) (interfaces.ISet[ENTITY], error)                                       // Найти все записи в хранилище по фильтру

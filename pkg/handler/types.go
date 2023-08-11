@@ -19,7 +19,7 @@ type Fields struct {
 
 type Callbacks[CONN any, ID any, DATA any, DTO any] struct {
 	GetIdentifierFromString func(value string) (ID, error)
-	GetProvider             func(ctx context.Context, storageName string) (provider.StoreProvider[CONN, ID, DATA], error)
+	GetProvider             func(ctx context.Context, storageName string) (provider.Provider[CONN, ID, DATA], error)
 	Fill                    func(dto DTO) (DATA, error)
 }
 
