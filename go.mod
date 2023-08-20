@@ -3,9 +3,16 @@ module github.com/small-entropy/go-backbone
 go 1.19
 
 require (
+	github.com/Shopify/go-lua v0.0.0-20221004153744-91867de107cf
 	github.com/go-playground/validator/v10 v10.14.1
 	github.com/labstack/echo/v4 v4.10.2
 	go.mongodb.org/mongo-driver v1.11.7
+)
+
+require (
+	github.com/google/go-cmp v0.5.8 // indirect
+	github.com/rogpeppe/go-internal v1.9.0 // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 )
 
 require (
@@ -14,6 +21,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/klauspost/compress v1.16.6 // indirect
+	github.com/kluctl/go-embed-python v0.0.0-3.10.9-20230206-2
 	github.com/labstack/gommon v0.4.0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
